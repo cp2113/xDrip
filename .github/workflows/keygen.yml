@@ -1,0 +1,24 @@
+name: Generate Keystore
+on: workflow_dispatch # Ez teszi lehetővé a kézi indítást
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Keystore
+        run: |
+          keytool -genkeypair -v \
+          -keystore my-release-key.jks \
+          -alias my-key-alias \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity 10000 \
+          -storepass paks2026 \
+          -keypass paks2026 \
+          -dname "CN=User, OU=AAPS, O=AAPS, L=Paks, S=Tolna, C=HU"
+
+      - name: Upload Keystore
+        uses: upload-artifact@v4
+        with:
+          name: my-keystore-file
+          path: my-release-key.jks
