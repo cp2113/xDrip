@@ -1,5 +1,5 @@
 name: Generate Keystore
-on: workflow_dispatch # Ez teszi lehetővé a kézi indítást
+on: workflow_dispatch
 
 jobs:
   generate:
@@ -18,7 +18,7 @@ jobs:
           -dname "CN=User, OU=AAPS, O=AAPS, L=Paks, S=Tolna, C=HU"
 
       - name: Upload Keystore
-        uses: upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: my-keystore-file
           path: my-release-key.jks
