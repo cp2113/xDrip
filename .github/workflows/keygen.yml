@@ -1,4 +1,4 @@
-name: Generate Keystore
+name: Generate Keystore and Base64
 on: workflow_dispatch
 
 jobs:
@@ -16,6 +16,12 @@ jobs:
           -storepass paks2026 \
           -keypass paks2026 \
           -dname "CN=User, OU=AAPS, O=AAPS, L=Paks, S=Tolna, C=HU"
+
+      - name: Convert to Base64
+        run: |
+          echo "Vágólapra másolható Base64 kód:"
+          base64 -w 0 my-release-key.jks
+          echo ""
 
       - name: Upload Keystore
         uses: actions/upload-artifact@v4
