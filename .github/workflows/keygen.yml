@@ -8,13 +8,13 @@ jobs:
       - name: Create Keystore
         run: |
           keytool -genkeypair -v \
-          -keystore my-release-key.jks \	# a létrehozandó fájl neve. Ez is letölthető.
-          -alias my-key-alias \		# például: key0 Fontos: Ezt a nevet pontosan ugyanígy kell majd beírnod a GitHub Secrets-be (ALIAS néven)
+          -keystore my-release-key.jks \
+          -alias my-key-alias \
           -keyalg RSA \
           -keysize 2048 \
-          -validity 100000 \		# érvényességi napok száma. Minimum 25 év legyen.
-          -storepass paks2026 \		# például: dokinő		
-          -keypass paks2026 \		# példásul: dokinő (ez is)
+          -validity 10000 \
+          -storepass paks2026 \
+          -keypass paks2026 \
           -dname "CN=User, OU=AAPS, O=AAPS, L=Paks, S=Tolna, C=HU"
 
       - name: Convert to Base64
