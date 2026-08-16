@@ -31,13 +31,13 @@ public class Libre2RawValue extends PlusModel {
     public double glucose;
 
    public static List<Libre2RawValue> weightedAverageInterval(long min) {
-        // A legfrissebb nyers értékeket kérjük le szűrés nélkül
         double timestamp = (new Date().getTime()) - (60000 * min);
         return new Select()
                 .from(Libre2RawValue.class)
                 .where("ts >= " + timestamp)
                 .where("glucose != 0")
                 .orderBy("ts desc")
+                .limit(5) // Max 5 elemet kérünk le: stabilan indul az app, és a súlyozás sem csúszik el!
                 .execute();
     }
 
