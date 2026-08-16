@@ -31,13 +31,16 @@ public class Libre2RawValue extends PlusModel {
     public double glucose;
 
     public static List<Libre2RawValue> weightedAverageInterval(long min) {
-        double timestamp = (new Date().getTime()) - (60000 * 1);
-        return new Select()
-                .from(Libre2RawValue.class)
-                .where("ts >= " + timestamp)
-                .orderBy("ts asc")
-                .execute();
-    }
+    // Meghagyjuk a tágabb időablakot, hogy a percekkel ezelőtti adatot is megtalálja, 
+    // DE a .limit(1) miatt KIZÁRÓLAG a legfrissebb az egyetlen elem kerül vissza!
+    double timestamp = (new Date().getTime()) - (60000 * min);
+    return new Select()
+            .from(Libre2RawValue.class)
+            .where("ts >= " + timestamp)
+            .orderBy("ts desc") // A legfrissebbet tesszük előre
+            .limit(1)           // Csak a legutolsó 1 darab értéket kérjük le (nincs átlagolás)
+            .execute();
+}
 
     public static List<Libre2RawValue> latestForGraph(int number, double startTime) {
         return latestForGraph(number, (long) startTime, Long.MAX_VALUE);
