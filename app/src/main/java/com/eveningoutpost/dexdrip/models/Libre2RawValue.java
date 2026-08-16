@@ -37,7 +37,7 @@ public class Libre2RawValue extends PlusModel {
                 .where("ts >= " + timestamp)
                 .where("glucose != 0")
                 .orderBy("ts desc")
-                .limit(5) // Max 5 elemet kérünk le: stabilan indul az app, és a súlyozás sem csúszik el!
+                .limit(1)
                 .execute();
     }
 
