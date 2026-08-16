@@ -31,7 +31,7 @@ public class Libre2RawValue extends PlusModel {
     public double glucose;
 
     public static List<Libre2RawValue> weightedAverageInterval(long min) {
-        double timestamp = (new Date().getTime()) - (60000 * min);
+        double timestamp = (new Date().getTime()) - (60000 * 1);
         return new Select()
                 .from(Libre2RawValue.class)
                 .where("ts >= " + timestamp)
