@@ -200,15 +200,22 @@ public class LibreReceiver extends BroadcastReceiver {
         return rawValue;
     }
 
-    private static void processValues(Libre2RawValue currentValue, List<Libre2RawValue> smoothingValues, long smoothing_minutes, Context context) {
-        if (Sensor.currentSensor() == null) {
-            Sensor.create(currentValue.timestamp, currentValue.serial);
-
-        }
-
-        double value = calculateWeightedAverage(smoothingValues, currentValue.timestamp, TimeUnit.MINUTES.toMillis(smoothing_minutes));
-        BgReading.bgReadingInsertLibre2(value, currentValue.timestamp, currentValue.glucose);
+   private static void processValues(Libre2RawValue currentValue,
+                                  List<Libre2RawValue> smoothingValues,
+                                  long smoothing_minutes,
+                                  Context context) {
+    if (Sensor.currentSensor() == null) {
+        Sensor.create(currentValue.timestamp, currentValue.serial);
     }
+
+    // A súlyozott átlag teljes kihagyása
+    double value = currentValue.glucose;
+
+    BgReading.bgReadingInsertLibre2(
+            value,
+            currentValue.timestamp,
+            currentValue.glucose);
+}
 
     private static void saveSensorStartTime(Bundle sensor, String serial) {
         if (sensor != null && sensor.containsKey("sensorStartTime")) {
