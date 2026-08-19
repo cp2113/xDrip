@@ -2,10 +2,10 @@ name: Build xDrip APK
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "master", "main" ]
-  workflow_dispatch: # Lehetővé teszi a manuális indítást is a GitHubról
+    branches: [ "**" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,11 +27,12 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK
+    - name: Build APK with Gradle
       run: ./gradlew assembleDebug --stacktrace
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: xDrip-debug-apk
-        path: app/build/outputs/apk/debug/*.apk
+        name: xDrip-apk
+        path: '**/*.apk'
+        if-no-files-found: error
