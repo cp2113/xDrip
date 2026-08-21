@@ -548,19 +548,33 @@ public class BgReading extends Model implements ShareUploadableBg {
     }
 
     public void postProcess(final boolean quick) {
-        // --- TESZT MÓDOSÍTÁS KEZDETE ---
-        this.calculated_value = 99.1;
-        this.filtered_calculated_value = 99.1;
-        this.dg_mgdl = 99.1;
-        this.calculated_value_slope = 0; // lapos trendnyíl (Flat)
-        this.dg_slope = 0;
-        this.hide_slope = false;
-        this.save(); // elmentjük a fixált értékeket az adatbázisba
-        // --- TESZT MÓDOSÍTÁS VÉGE ---
+        // --- DINAMIKUS TESZT FELÜLÍRÁS KEZDETE ---
+        if (Pref.getBooleanDefaultFalse("manual_test_mode_enabled")) {
+            try {
+                // Kiolvassuk a beállított értéket (alapértelmezetten 5.5 mmol/l)
+                String overrideStr = Pref.getString("manual_test_value", "5.5");
+                double mmolValue = Double.parseDouble(overrideStr.replace(",", "."));
+                
+                // Átváltás mg/dL-re
+                double mgdlValue = mmolValue * Constants.MGDL_TO_MMOLL != 0 ? mmolValue / Constants.MGDL_TO_MMOLL : mmolValue * 18.0182;
 
-        injectNoise(true); // Add noise parameter for nightscout
-        // A teszt alatt a kijelzett értéket is fixáljuk (kihagyjuk vagy felülírjuk a BestGlucose-t):
-        // injectDisplayGlucose(BestGlucose.getDisplayGlucose()); 
+                this.calculated_value = mgdlValue;
+                this.filtered_calculated_value = mgdlValue;
+                this.dg_mgdl = mgdlValue;
+                this.calculated_value_slope = 0; // Lapos trendnyíl (Flat)
+                this.dg_slope = 0;
+                this.hide_slope = false;
+                this.save(); // Frissített értékek mentése az adatbázisba
+            } catch (Exception e) {
+                UserError.Log.e(TAG, "Hiba a teszt ertek feldolgozasakor: " + e.getMessage());
+            }
+        }
+        // --- DINAMIKUS TESZT FELÜLÍRÁS VÉGE ---
+
+        injectNoise(true);
+        if (!Pref.getBooleanDefaultFalse("manual_test_mode_enabled")) {
+            injectDisplayGlucose(BestGlucose.getDisplayGlucose());
+        }
         
         BgSendQueue.handleNewBgReading(this, "create", xdrip.getAppContext(), Home.get_follower(), quick);
     }
