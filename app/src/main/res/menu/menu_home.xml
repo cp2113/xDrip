@@ -185,6 +185,5 @@
         android:checkable="true"
         android:orderInCategory="2"
         android:onClick="toggleSpeakReadings"
-        android:visible="false"
-        android:showAsAction="never"/>
+        androidon="never
 </menu>
