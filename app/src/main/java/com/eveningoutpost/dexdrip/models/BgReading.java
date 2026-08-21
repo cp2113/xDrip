@@ -389,11 +389,16 @@ public class BgReading extends Model implements ShareUploadableBg {
                     friendlyName.compareTo("OUT_OF_RANGE") == 0) {
                 bgReading.hide_slope = true;
             }
+            if (Preferences.isManualTestModeEnabled()) {
+                double mgdlValue = Preferences.getManualTestValue() * 18.0182;
+                bgReading.calculated_value = mgdlValue;
+                bgReading.dg_mgdl = mgdlValue;
+                bgReading.calculated_value_slope = 0;
+            }
             bgReading.save();
             bgReading.find_new_curve();
             bgReading.find_new_raw_curve();
-            //context.startService(new Intent(context, Notifications.class));
-            Notifications.start(); // this may not be needed as it is duplicated in handleNewBgReading
+            Notifications.start();
             BgSendQueue.handleNewBgReading(bgReading, "create", context);
         }
     }
@@ -549,14 +554,13 @@ public class BgReading extends Model implements ShareUploadableBg {
 
     public void postProcess(final boolean quick) {
         // --- DINAMIKUS TESZT FELÜLÍRÁS KEZDETE ---
-        if (Pref.getBooleanDefaultFalse("manual_test_mode_enabled")) {
+        if (Preferences.isManualTestModeEnabled()) {
             try {
-                // Kiolvassuk a beállított értéket (alapértelmezetten 5.5 mmol/l)
-                String overrideStr = Pref.getString("manual_test_value", "5.5");
-                double mmolValue = Double.parseDouble(overrideStr.replace(",", "."));
+                // Kiolvassuk a beállított értéket a Preferences osztályon keresztül
+                double mmolValue = Preferences.getManualTestValue();
                 
-                // Átváltás mg/dL-re
-                double mgdlValue = mmolValue * Constants.MGDL_TO_MMOLL != 0 ? mmolValue / Constants.MGDL_TO_MMOLL : mmolValue * 18.0182;
+                // Átváltás mg/dL-re (1 mmol/L = 18.0182 mg/dL)
+                double mgdlValue = mmolValue * 18.0182;
 
                 this.calculated_value = mgdlValue;
                 this.filtered_calculated_value = mgdlValue;
@@ -572,7 +576,7 @@ public class BgReading extends Model implements ShareUploadableBg {
         // --- DINAMIKUS TESZT FELÜLÍRÁS VÉGE ---
 
         injectNoise(true);
-        if (!Pref.getBooleanDefaultFalse("manual_test_mode_enabled")) {
+        if (!Preferences.isManualTestModeEnabled()) {
             injectDisplayGlucose(BestGlucose.getDisplayGlucose());
         }
         
