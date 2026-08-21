@@ -444,4 +444,22 @@
             android:key="wifi_recievers_addresses"
             android:title="@string/list_of_receivers" />
     </PreferenceCategory>
+	<PreferenceCategory
+        android:key="manual_test_category"
+        android:title="Manual Test Override">
+
+        <SwitchPreference
+            android:key="manual_test_mode_enabled"
+            android:title="Enable Test Override"
+            android:summary="Fix teszt érték kényszerítése minden mérésre"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            android:key="manual_test_value"
+            android:title="Test Value (mmol/l)"
+            android:summary="Kívánt érték mmol/l-ben (pl. 5.5)"
+            android:defaultValue="5.5"
+            android:inputType="numberDecimal"
+            android:dependency="manual_test_mode_enabled" />
+    </PreferenceCategory>
 </PreferenceScreen>
