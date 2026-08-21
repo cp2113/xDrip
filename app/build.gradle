@@ -106,7 +106,7 @@ android {
         multiDexEnabled false
 
         // To get a Google Maps API key, follow this link, follow the directions and press "Create" at the end:
-        // https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=7C:1E:BB:15:CE:A1:92:30:47:9D:D0:3D:89:F6:C6:51:7D:3C:1B:DD%3Bcom.eveningoutpost.dexdrip_special
+        // https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=7C:1E:BB:15:CE:A1:92:30:47:9D:D0:3D:89:F6:C6:51:7D:3C:1B:DD%3Bcom.eveningoutpost.dexdrip
         manifestPlaceholders = [google_maps_key:getLocalProperty('google_maps_key'),
                                 'appAuthRedirectScheme': 'xdrip',
                                 appId: applicationId
@@ -240,7 +240,7 @@ android {
             // Otherwise, all variants use the "dev" flavor configurations.
         }
     }
-    namespace 'com.eveningoutpost.dexdrip_special'
+    namespace 'com.eveningoutpost.dexdrip'
     buildFeatures {
         buildConfig true
     }
