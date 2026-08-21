@@ -627,11 +627,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
 
         currentBgValueText.setText(""); // clear any design prototyping default
-        BgReading.create(
-        100000,
-        100000,
-        getApplicationContext(),
-        System.currentTimeMillis());
+        
     }
 
     private boolean firstRunDialogs(final boolean checkedeula) {
