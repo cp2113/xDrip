@@ -548,11 +548,23 @@ public class BgReading extends Model implements ShareUploadableBg {
     }
 
     public void postProcess(final boolean quick) {
+        // --- TESZT MÓDOSÍTÁS KEZDETE ---
+        this.calculated_value = 99.1;
+        this.filtered_calculated_value = 99.1;
+        this.dg_mgdl = 99.1;
+        this.calculated_value_slope = 0; // lapos trendnyíl (Flat)
+        this.dg_slope = 0;
+        this.hide_slope = false;
+        this.save(); // elmentjük a fixált értékeket az adatbázisba
+        // --- TESZT MÓDOSÍTÁS VÉGE ---
+
         injectNoise(true); // Add noise parameter for nightscout
-        injectDisplayGlucose(BestGlucose.getDisplayGlucose()); // Add display glucose for nightscout
+        // A teszt alatt a kijelzett értéket is fixáljuk (kihagyjuk vagy felülírjuk a BestGlucose-t):
+        // injectDisplayGlucose(BestGlucose.getDisplayGlucose()); 
+        
         BgSendQueue.handleNewBgReading(this, "create", xdrip.getAppContext(), Home.get_follower(), quick);
     }
-
+    
     public static BgReading createFromRawNoSave(Sensor sensor, Calibration calibration, double raw_data, double filtered_data, long timestamp) {
         final BgReading bgReading = new BgReading();
         if (sensor == null) {
